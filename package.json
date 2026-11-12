@@ -1,0 +1,17 @@
+{
+  "name": "music-buddy",
+  "version": "1.0.0",
+  "description": "Music Buddy - Dark Red & Black Malayalam Melody Landing Page with Background Radio",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "music",
+    "malayalam",
+    "melody",
+    "landing-page",
+    "nodejs"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Music Buddy — Malayalam Melodies &amp; Lo-Fi Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- Ambient Crimson Particle & Glow Layer -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow ambient-glow--top" aria-hidden="true"></div>
+  <div class="ambient-glow ambient-glow--bottom" aria-hidden="true"></div>
+
+  <!-- Hidden YouTube Full-Song Audio Engine Host -->
+  <div id="ytPlayerWrapper" class="yt-hidden-host" aria-hidden="true">
+    <div id="ytPlayer"></div>
+  </div>
+
+  <!-- Autoplay Unlock Banner -->
+  <button id="audioUnlockBanner" class="unlock-banner hidden" type="button">
+    <span class="unlock-pulse"></span>
+    <span>Click anywhere to start <strong>Music Buddy</strong> Full-Song Background Radio</span>
+  </button>
+
+  <!-- Website Navigation -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="#home" class="brand" data-nav="home">
+        <span class="brand-mark" aria-hidden="true">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </span>
+        <span class="brand-text">Music <span>Buddy</span></span>
+      </a>
+
+      <nav class="nav-links" aria-label="Website Navigation">
+        <button class="nav-tab active" data-view="home" type="button">Home</button>
+        <button class="nav-tab" data-view="vault" type="button">Melody Vault</button>
+        <button class="nav-tab nav-tab--space" data-view="space" type="button">
+          <span class="space-spark">✦</span> Lo-Fi Space
+        </button>
+        <button class="nav-tab" data-view="maestros" type="button">Playlists &amp; Maestros</button>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="navLofiQuickBtn" class="lofi-pill" type="button" title="Toggle Lo-Fi Space Mode">
+          <span class="lofi-dot"></span>
+          <span id="navLofiLabel">Lo-Fi: OFF</span>
+        </button>
+        <button id="navRadioBtn" class="radio-pill" type="button" title="Play / Pause Background Song">
+          <span class="radio-dot"></span>
+          <span id="navRadioLabel">Background Radio</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==================== VIEW 1: HOME ==================== -->
+    <section id="view-home" class="view-panel active">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">
+              <span class="eyebrow-line"></span>
+              FULL-SONG MALAYALAM STREAMING &amp; LO-FI STUDIO
+            </div>
+
+            <h1 class="hero-title">
+              Every Timeless
+              <span class="text-crimson">Malayalam Melody</span>
+              Full Length &amp; Lo-Fi Ready.
+            </h1>
+
+            <p class="hero-subtitle">
+              Stream complete Malayalam classics from 1964 to today in the background, or step into
+              <strong>Lo-Fi Space</strong> to slow down any track with warm tape filters, reverb,
+              vinyl crackle, and monsoon rain.
+            </p>
+
+            <div class="hero-cta">
+              <button id="heroPlayBtn" class="btn btn-primary" type="button">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                <span>Play Full Song</span>
+              </button>
+              <button id="heroOpenSpaceBtn" class="btn btn-lofi" type="button">
+                <span>✦ Open Lo-Fi Space</span>
+              </button>
+              <button id="heroOpenVaultBtn" class="btn btn-ghost" type="button">
+                <span>Browse Vault</span>
+              </button>
+            </div>
+
+            <div class="hero-stats">
+              <div class="stat">
+                <span class="stat-value">Full Tracks</span>
+                <span class="stat-label">Complete Songs, Zero Cuts</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat">
+                <span class="stat-value">1964 – 2026</span>
+                <span class="stat-label">Old to New Malayalam</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat">
+                <span class="stat-value">Lo-Fi DSP</span>
+                <span class="stat-label">Slowed + Reverb + Rain</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Vinyl Deck -->
+          <div class="hero-deck">
+            <div class="deck-card">
+              <div class="deck-header">
+                <span id="deckEraBadge" class="badge-crimson">GOLDEN OLDIES • 1964</span>
+                <span id="deckEngineBadge" class="badge-muted">FULL SONG</span>
+              </div>
+
+              <div class="vinyl-stage">
+                <div id="heroVinyl" class="vinyl-disc">
+                  <div class="vinyl-grooves"></div>
+                  <div class="vinyl-center">
+                    <img id="heroArtwork" class="vinyl-art hidden" alt="Album artwork" />
+                    <div id="heroArtFallback" class="vinyl-art-fallback">
+                      <span>MB</span>
+                    </div>
+                    <div class="vinyl-spindle"></div>
+                  </div>
+                </div>
+                <div class="vinyl-tonearm" id="vinylTonearm"></div>
+              </div>
+
+              <div class="deck-track-info">
+                <h2 id="heroTrackTitle" class="deck-title">Thamasamenthe Varuvan</h2>
+                <p id="heroTrackMeta" class="deck-meta">Bhargavi Nilayam • K.J. Yesudas • M.S. Baburaj</p>
+                <span id="heroTrackMood" class="deck-mood">Mood: Moonlit Yearning</span>
+              </div>
+
+              <canvas id="heroVisualizer" class="hero-visualizer" width="420" height="68"></canvas>
+
+              <div class="deck-controls">
+                <button id="deckPrevBtn" class="icon-btn" type="button" aria-label="Previous Melody">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                </button>
+                <button id="deckPlayBtn" class="play-orb" type="button" aria-label="Play or Pause">
+                  <svg id="deckPlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <button id="deckNextBtn" class="icon-btn" type="button" aria-label="Next Melody">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 18h2V6h-2zM6 18l8.5-6L6 6z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Era Timeline Section -->
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <span class="section-tag">CHRONOLOGICAL JOURNEY</span>
+              <h2 class="section-title">Four Eras of Malayalam Soul</h2>
+            </div>
+            <p class="section-desc">
+              Click any era to open the Vault filtered to that generation and play its full songs continuously.
+            </p>
+          </div>
+
+          <div class="era-grid">
+            <article class="era-card" data-era="oldies">
+              <div class="era-year">1964 – 1989</div>
+              <h3>Golden Oldies</h3>
+              <p>Black &amp; white poetry, harmonium warmth, and timeless ragas by Baburaj, Devarajan &amp; Ilaiyaraaja.</p>
+              <div class="era-footer">
+                <span>9 Full Classics</span>
+                <span class="era-cta">Tune Era →</span>
+              </div>
+            </article>
+
+            <article class="era-card" data-era="nineties">
+              <div class="era-year">1990 – 1999</div>
+              <h3>90s Evergreen</h3>
+              <p>Cassette memories, monsoon flutes, and sweeping symphonies from Raveendran, Johnson &amp; Vidyasagar.</p>
+              <div class="era-footer">
+                <span>9 Full Classics</span>
+                <span class="era-cta">Tune Era →</span>
+              </div>
+            </article>
+
+            <article class="era-card" data-era="modern">
+              <div class="era-year">2000 – 2018</div>
+              <h3>Modern Classics</h3>
+              <p>Acoustic guitars, midnight rain ballads, and unforgettable hooks from Premam, Devadoothan &amp; Moideen.</p>
+              <div class="era-footer">
+                <span>10 Full Classics</span>
+                <span class="era-cta">Tune Era →</span>
+              </div>
+            </article>
+
+            <article class="era-card" data-era="newwave">
+              <div class="era-year">2019 – PRESENT</div>
+              <h3>New Wave</h3>
+              <p>Lush ambient textures and contemporary heartbreak anthems by Sushin Shyam, Hesham &amp; Vishnu Vijay.</p>
+              <div class="era-footer">
+                <span>8 Full Melodies</span>
+                <span class="era-cta">Tune Era →</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ==================== VIEW 2: MELODY VAULT ==================== -->
+    <section id="view-vault" class="view-panel">
+      <div class="container section">
+        <div class="section-head">
+          <div>
+            <span class="section-tag">FULL-SONG ARCHIVE • OLD TO NEW</span>
+            <h2 class="section-title">The Malayalam Melody Vault</h2>
+          </div>
+          <div class="vault-actions">
+            <button id="playAllBtn" class="btn btn-primary btn-sm" type="button">Play Queue</button>
+            <button id="shuffleAllBtn" class="btn btn-ghost btn-sm" type="button">Shuffle All</button>
+          </div>
+        </div>
+
+        <!-- Search Any Malayalam Song + Filter Bar -->
+        <div class="vault-controls">
+          <div class="search-cluster">
+            <div class="search-wrap">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Search vault or type ANY Malayalam song to play..."
+                autocomplete="off"
+              />
+            </div>
+            <button id="playCustomSearchBtn" class="btn btn-primary btn-sm" type="button" title="Search and stream any Malayalam song">
+              Stream Any Song
+            </button>
+          </div>
+
+          <div class="filter-pills" role="tablist" aria-label="Filter melodies by era">
+            <button class="pill active" data-filter="all" type="button">All Eras</button>
+            <button class="pill" data-filter="oldies" type="button">60s–80s</button>
+            <button class="pill" data-filter="nineties" type="button">90s</button>
+            <button class="pill" data-filter="modern" type="button">2000s–2018</button>
+            <button class="pill" data-filter="newwave" type="button">New Wave</button>
+          </div>
+
+          <button id="sortToggleBtn" class="sort-btn" type="button" title="Toggle Chronological Order">
+            <span id="sortLabel">Old → New</span>
+          </button>
+        </div>
+
+        <div class="tracklist-shell">
+          <div class="tracklist-header">
+            <span>#</span>
+            <span>Melody &amp; Film</span>
+            <span>Singer &amp; Composer</span>
+            <span>Era</span>
+            <span class="col-right">Length</span>
+          </div>
+          <div id="trackList" class="tracklist-body" role="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: LO-FI SPACE STUDIO ==================== -->
+    <section id="view-space" class="view-panel">
+      <div class="container section">
+        <div class="section-head">
+          <div>
+            <span class="section-tag">AUDIO TRANSFORMATION STUDIO</span>
+            <h2 class="section-title">Music Buddy <span class="text-crimson">Lo-Fi Space</span></h2>
+          </div>
+          <p class="section-desc">
+            Transform any Malayalam melody into a dreamy late-night Lo-Fi track — slow the tempo, add vinyl crackle, monsoon rain, warm tape filters, or switch to a full Lo-Fi slowed + reverb mix.
+          </p>
+        </div>
+
+        <div class="space-grid">
+          <!-- Left: Now Playing in Space + Master Switch -->
+          <div class="space-card space-card--hero">
+            <div class="space-card-top">
+              <span class="badge-crimson">ACTIVE TRACK IN SPACE</span>
+              <button id="spaceMasterToggle" class="master-switch" type="button" aria-pressed="false">
+                <span class="switch-knob"></span>
+                <span id="spaceMasterLabel">Lo-Fi OFF</span>
+              </button>
+            </div>
+
+            <div class="space-now-box">
+              <div class="space-vinyl-mini" id="spaceVinylMini">
+                <img id="spaceArtwork" class="hidden" alt="" />
+                <span id="spaceArtFallback">MB</span>
+              </div>
+              <div class="space-now-meta">
+                <h3 id="spaceTrackTitle">Thamasamenthe Varuvan</h3>
+                <p id="spaceTrackSub">Bhargavi Nilayam (1964) • K.J. Yesudas</p>
+                <div class="space-mode-badges">
+                  <span id="spaceSourceBadge" class="badge-muted">SOURCE: FULL STREAM</span>
+                  <span id="spaceLofiStatusBadge" class="badge-muted">ORIGINAL SPEED</span>
+                </div>
+              </div>
+            </div>
+
+            <canvas id="spaceVisualizer" class="space-visualizer" width="520" height="110"></canvas>
+
+            <!-- Lo-Fi Conversion Strategy -->
+            <div class="space-strategy">
+              <label class="strategy-label">Lo-Fi Conversion Mode</label>
+              <div class="strategy-pills">
+                <button id="lofiMethodDspBtn" class="pill active" type="button">
+                  Slowed + Ambience DSP
+                </button>
+                <button id="lofiMethodMixBtn" class="pill" type="button">
+                  Full Lo-Fi Slowed+Reverb Mix
+                </button>
+              </div>
+              <p id="strategyHint" class="strategy-hint">
+                Slows the current full song in real time and blends warm vinyl crackle, monsoon rain, and ambient pads.
+              </p>
+            </div>
+
+            <!-- Local File Drop Zone for Full Web Audio DSP -->
+            <div id="localDropZone" class="drop-zone">
+              <input id="localFileInput" type="file" accept="audio/*" class="hidden" />
+              <div class="drop-zone-inner">
+                <strong>Drop or Upload Any MP3 / WAV / M4A</strong>
+                <span>Unlocks full Web Audio DSP: pitch-dropped Slowed + Convolver Reverb + Low-Pass Tape Warmth</span>
+                <button id="browseLocalBtn" class="btn btn-ghost btn-sm" type="button">Choose Audio File</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Studio Knobs & Presets -->
+          <div class="space-card space-card--controls">
+            <div class="space-card-top">
+              <span class="section-tag">STUDIO PRESETS</span>
+              <button id="resetLofiBtn" class="sort-btn" type="button">Reset Crisp</button>
+            </div>
+
+            <div class="preset-grid">
+              <button class="preset-btn" data-preset="midnight" type="button">
+                <strong>Midnight Kochi</strong>
+                <span>0.85x • Warm Vinyl • Light Rain</span>
+              </button>
+              <button class="preset-btn" data-preset="monsoon" type="button">
+                <strong>Monsoon Cassette</strong>
+                <span>0.80x • Heavy Rain • Deep Tape</span>
+              </button>
+              <button class="preset-btn" data-preset="velvet" type="button">
+                <strong>Velvet Slowed</strong>
+                <span>0.85x • Lush Reverb • Clean</span>
+              </button>
+              <button class="preset-btn" data-preset="crisp" type="button">
+                <strong>Original Crisp</strong>
+                <span>1.00x • Studio Bypass</span>
+              </button>
+            </div>
+
+            <div class="sliders-stack">
+              <div class="slider-row">
+                <div class="slider-head">
+                  <label for="lofiSpeedSlider">Playback Speed (Slowed)</label>
+                  <span id="lofiSpeedVal" class="mono-val">1.00x</span>
+                </div>
+                <input id="lofiSpeedSlider" type="range" min="0.75" max="1.05" step="0.05" value="1.00" />
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-head">
+                  <label for="lofiCrackleSlider">Vinyl Crackle &amp; Tape Hiss</label>
+                  <span id="lofiCrackleVal" class="mono-val">0%</span>
+                </div>
+                <input id="lofiCrackleSlider" type="range" min="0" max="100" step="1" value="0" />
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-head">
+                  <label for="lofiRainSlider">Monsoon Rain Ambience</label>
+                  <span id="lofiRainVal" class="mono-val">0%</span>
+                </div>
+                <input id="lofiRainSlider" type="range" min="0" max="100" step="1" value="0" />
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-head">
+                  <label for="lofiWarmthSlider">Tape Warmth (Low-Pass Cutoff)</label>
+                  <span id="lofiWarmthVal" class="mono-val">8000 Hz</span>
+                </div>
+                <input id="lofiWarmthSlider" type="range" min="600" max="8000" step="100" value="8000" />
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-head">
+                  <label for="lofiReverbSlider">Hall Reverb Depth</label>
+                  <span id="lofiReverbVal" class="mono-val">0%</span>
+                </div>
+                <input id="lofiReverbSlider" type="range" min="0" max="100" step="1" value="0" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: PLAYLISTS & MAESTROS ==================== -->
+    <section id="view-maestros" class="view-panel">
+      <div class="container section">
+        <div class="section-head">
+          <div>
+            <span class="section-tag">CURATED COLLECTIONS</span>
+            <h2 class="section-title">Mood Playlists &amp; Maestros</h2>
+          </div>
+          <p class="section-desc">
+            Launch a themed Malayalam playlist or filter by any iconic voice and composer.
+          </p>
+        </div>
+
+        <div class="playlist-grid">
+          <button class="playlist-card" data-playlist="monsoon" type="button">
+            <span class="playlist-tag">LO-FI RECOMMENDED</span>
+            <h3>Monsoon in Thrissur</h3>
+            <p>Rain-soaked classics from Vidyasagar, Raveendran &amp; Ratheesh Vega.</p>
+          </button>
+          <button class="playlist-card" data-playlist="midnight" type="button">
+            <span class="playlist-tag">60s – 80s VINYL</span>
+            <h3>Midnight Vinyl Gold</h3>
+            <p>Late-night Yesudas, Jayachandran &amp; Baburaj masterpieces.</p>
+          </button>
+          <button class="playlist-card" data-playlist="modern_soul" type="button">
+            <span class="playlist-tag">2010s – PRESENT</span>
+            <h3>Heartbreak &amp; Campus</h3>
+            <p>Malare, Darshana, Uyire, Jeevamshamayi &amp; Nebulakal.</p>
+          </button>
+        </div>
+
+        <div class="maestro-grid" style="margin-top: 2rem;">
+          <button class="maestro-card" data-maestro="Yesudas" type="button">
+            <span class="maestro-era">1964 – 2003</span>
+            <h4>K.J. Yesudas</h4>
+            <p>The Celestial Voice of Malayalam Cinema</p>
+          </button>
+          <button class="maestro-card" data-maestro="Devarajan" type="button">
+            <span class="maestro-era">1960s – 70s</span>
+            <h4>G. Devarajan</h4>
+            <p>Sculptor of Pure Classical Cinema</p>
+          </button>
+          <button class="maestro-card" data-maestro="Raveendran" type="button">
+            <span class="maestro-era">1990s</span>
+            <h4>Raveendran Master</h4>
+            <p>The Raga Virtuoso of 90s Nostalgia</p>
+          </button>
+          <button class="maestro-card" data-maestro="Vidyasagar" type="button">
+            <span class="maestro-era">1997 – 2003</span>
+            <h4>Vidyasagar</h4>
+            <p>King of Monsoon &amp; Romantic Melodies</p>
+          </button>
+          <button class="maestro-card" data-maestro="Ilaiyaraaja" type="button">
+            <span class="maestro-era">1982 – 1997</span>
+            <h4>Ilaiyaraaja</h4>
+            <p>Timeless Symphonic Storytelling</p>
+          </button>
+          <button class="maestro-card" data-maestro="Chithra" type="button">
+            <span class="maestro-era">1984 – 1998</span>
+            <h4>K.S. Chithra</h4>
+            <p>The Nightingale of South India</p>
+          </button>
+          <button class="maestro-card" data-maestro="Sushin Shyam" type="button">
+            <span class="maestro-era">2019 – 2024</span>
+            <h4>Sushin Shyam</h4>
+            <p>Atmospheric New-Wave Pioneer</p>
+          </button>
+          <button class="maestro-card" data-maestro="Hesham" type="button">
+            <span class="maestro-era">2022 – Present</span>
+            <h4>Hesham Abdul Wahab</h4>
+            <p>Soulful Indie &amp; Campus Heartbeat</p>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="brand">
+          <span class="brand-text">Music <span>Buddy</span></span>
+        </div>
+        <p class="footer-note">
+          Malayalam Full-Song Streaming &amp; Lo-Fi Studio — Dark Crimson Edition.
+        </p>
+      </div>
+      <div class="shortcuts-note">
+        <span><kbd>Space</kbd> Play / Pause</span>
+        <span><kbd>←</kbd> / <kbd>→</kbd> Track</span>
+        <span><kbd>L</kbd> Lo-Fi Space</span>
+        <span><kbd>M</kbd> Mute</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Persistent Docked Background Audio Bar -->
+  <aside class="player-dock" aria-label="Background Music Player">
+    <div class="dock-progress-track" id="dockProgressTrack" role="slider" aria-label="Seek progress" tabindex="0">
+      <div class="dock-progress-fill" id="dockProgressFill"></div>
+    </div>
+
+    <div class="container dock-inner">
+      <div class="dock-now">
+        <div class="dock-thumb" id="dockThumb">
+          <img id="dockArtwork" class="hidden" alt="" />
+          <span id="dockFallback">MB</span>
+        </div>
+        <div class="dock-meta">
+          <div class="dock-title-row">
+            <span id="dockTitle" class="dock-title">Thamasamenthe Varuvan</span>
+            <span id="dockStatusTag" class="dock-tag">READY</span>
+          </div>
+          <div id="dockSubtitle" class="dock-subtitle">Bhargavi Nilayam (1964) • K.J. Yesudas</div>
+        </div>
+      </div>
+
+      <div class="dock-center">
+        <div class="dock-buttons">
+          <button id="dockShuffleBtn" class="icon-btn icon-btn--sm" type="button" title="Shuffle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+            </svg>
+          </button>
+          <button id="dockPrevBtn" class="icon-btn" type="button" title="Previous">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+          </button>
+          <button id="dockPlayBtn" class="play-orb play-orb--sm" type="button" title="Play / Pause">
+            <svg id="dockPlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button id="dockNextBtn" class="icon-btn" type="button" title="Next">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 18h2V6h-2zM6 18l8.5-6L6 6z"/></svg>
+          </button>
+          <button id="dockRepeatBtn" class="icon-btn icon-btn--sm" type="button" title="Repeat One">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+          </button>
+        </div>
+        <div class="dock-time">
+          <span id="currentTimeLabel">0:00</span>
+          <span>/</span>
+          <span id="totalTimeLabel">0:00</span>
+        </div>
+      </div>
+
+      <div class="dock-right">
+        <button id="dockSpaceBtn" class="mode-toggle mode-toggle--space" type="button" title="Open Lo-Fi Space / Toggle Lo-Fi">
+          <span class="mode-dot"></span>
+          <span id="dockSpaceLabel">✦ Lo-Fi Space</span>
+        </button>
+
+        <div class="volume-wrap">
+          <button id="muteBtn" class="icon-btn icon-btn--sm" type="button" title="Mute / Unmute">
+            <svg id="volumeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+            </svg>
+          </button>
+          <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.75" aria-label="Volume" />
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <audio id="bgAudio" preload="auto"></audio>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
